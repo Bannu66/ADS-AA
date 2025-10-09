@@ -1,0 +1,120 @@
+#include <stdio.h>
+
+#define MAX 100
+
+int heap[MAX];
+int size = 0;
+
+// Swap two integers
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Insert an element into the Max Heap
+void insert(int value) {
+    int i = size;
+    if (size == MAX) {
+        printf("Heap is full!\n");
+        return;
+    }
+
+    heap[size] = value;
+    size++;
+
+    // Heapify up
+    while (i != 0 && heap[(i - 1) / 2] < heap[i]) {
+        swap(&heap[i], &heap[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+
+// Heapify down for deletion
+void heapify(int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < size && heap[left] > heap[largest])
+        largest = left;
+    if (right < size && heap[right] > heap[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(&heap[i], &heap[largest]);
+        heapify(largest);
+    }
+}
+
+// Delete the root (maximum element)
+void deleteRoot() {
+    if (size == 0) {
+        printf("Heap is empty!\n");
+        return;
+    }
+
+    printf("Deleted root element: %d\n", heap[0]);
+    heap[0] = heap[size - 1];
+    size--;
+    heapify(0);
+}
+
+// Display the heap
+void display() {
+int i;
+    if (size == 0) {
+        printf("Heap is empty!\n");
+        return;
+    }
+
+    printf("Heap elements: ");
+    for (i = 0; i < size; i++)
+        printf("%d ", heap[i]);
+    printf("\n");
+}
+
+// Main function
+int main() {
+    int choice, value, n,i;
+
+    printf("Enter number of elements to insert initially: ");
+    scanf("%d", &n);
+
+    printf("Enter %d elements:\n", n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &value);
+        insert(value);
+    }
+
+    do {
+        printf("\n------ Max Heap Menu ------\n");
+        printf("1. Insert Element\n");
+        printf("2. Delete Root\n");
+        printf("3. Display Heap\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter element to insert: ");
+                scanf("%d", &value);
+                insert(value);
+                break;
+            case 2:
+                deleteRoot();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter 1–4.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
